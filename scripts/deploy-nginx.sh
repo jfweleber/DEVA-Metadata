@@ -40,12 +40,20 @@ command -v nginx >/dev/null || fail "nginx is not installed on this host."
 # -----------------------------------------------------------------------------
 # STEP 1: GET THE CODE
 # -----------------------------------------------------------------------------
+# This script runs as root, but the checkout may be owned by another user, and
+# git refuses to operate on a repository owned by someone else ("detected
+# dubious ownership"). Declaring it safe per invocation avoids editing root's
+# global git config.
+git_app() {
+  git -c safe.directory="${APP_DIR}" -C "${APP_DIR}" "$@"
+}
+
 if [ -d "${APP_DIR}/.git" ]; then
   log "Updating the existing checkout at ${APP_DIR}"
   command -v git >/dev/null || fail "git is not installed. Try: apt install git"
-  git -C "${APP_DIR}" fetch --quiet origin "${BRANCH}"
-  git -C "${APP_DIR}" reset --hard --quiet "origin/${BRANCH}"
-  DEPLOYED_AT="$(git -C "${APP_DIR}" log -1 --format='%h %s')"
+  git_app fetch --quiet origin "${BRANCH}"
+  git_app reset --hard --quiet "origin/${BRANCH}"
+  DEPLOYED_AT="$(git_app log -1 --format='%h %s')"
 elif [ -f "${APP_DIR}/index.html" ]; then
   # Files were put here by hand, usually by unpacking the release tarball.
   # Leave them alone and just do the nginx half of the job.
@@ -57,13 +65,17 @@ else
   command -v git >/dev/null || fail "git is not installed. Try: apt install git"
   log "Cloning ${REPO} into ${APP_DIR}"
   git clone --quiet --branch "${BRANCH}" "${REPO}" "${APP_DIR}"
-  DEPLOYED_AT="$(git -C "${APP_DIR}" log -1 --format='%h %s')"
+  DEPLOYED_AT="$(git_app log -1 --format='%h %s')"
 fi
 
-# nginx only needs to read these files.
-chown -R www-data:www-data "${APP_DIR}"
+# nginx only needs to READ the site, so the files stay owned by root and are
+# made world-readable. Handing the web server ownership of its own document
+# root would let a compromised nginx rewrite the site, and it is what caused
+# git to refuse the checkout as "dubious ownership" on the next deploy.
+chown -R root:root "${APP_DIR}"
 find "${APP_DIR}" -type d -exec chmod 755 {} +
 find "${APP_DIR}" -type f -exec chmod 644 {} +
+chmod 755 "${APP_DIR}/scripts/deploy-nginx.sh" 2>/dev/null || true
 
 # -----------------------------------------------------------------------------
 # STEP 2: NGINX SERVER BLOCK
