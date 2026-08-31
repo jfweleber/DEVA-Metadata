@@ -9,24 +9,47 @@ Site: <https://metadata.weleber.net>
 
 Have these to hand. The tool will not guess any of them:
 
-- The metadata export from ArcGIS Pro for the layer.
+- An export from ArcGIS, see below.
 - What each user-facing field actually means, and the meaning of every coded
   value in it.
 - Where the data came from: source datasets with originators and dates.
 - What you did to produce the layer: tools, parameters, dates.
-- The feature count and extent of the published layer.
 
 ## Getting the export out of ArcGIS Pro
 
-1. In the Catalog pane, right-click the feature class or layer, choose
-   **View Metadata**.
-2. On the **Metadata** tab of the ribbon, click **Export**.
-3. Choose **FGDC CSDGM Metadata** or **ArcGIS Metadata**. Either works.
+**Use the XML Workspace Document.** It works whether or not the layer has any
+metadata, which most do not.
+
+1. In the Catalog pane, right-click the geodatabase, feature dataset or feature
+   class and choose **Export**, then **XML Workspace Document**.
+2. Choose **Binary** or **Text**; text is what to upload here.
+3. Leave **Export the data** ticked if you can. With the data included the tool
+   counts your features and measures your value ranges instead of asking you.
 4. Save the `.xml` somewhere you can find it.
 
-The export carries the field schema, extent, coordinate system and feature
-count. It rarely carries field definitions, which is the part you will spend
-most of your time on.
+That file carries the field schema, the domains, the geometry type, the
+coordinate system, the extent and the editor tracking configuration. What it
+does not carry is anything a person has to write: the title, the abstract, the
+purpose, the keywords and the lineage. Those are what the wizard asks for.
+
+**If the layer already has good metadata**, export that too and upload it
+instead: right-click the layer, **View Metadata**, then **Export** on the
+Metadata tab. FGDC CSDGM, ArcGIS Metadata and ISO 19139 all work. If the
+workspace export already had metadata embedded in it, the tool uses both without
+being asked.
+
+### A note on large exports
+
+A workspace exported with data can be very large. The tool reads it in pieces
+and shows progress; a few hundred megabytes is fine, and nothing is uploaded
+anywhere. If your geodatabase is enormous, export just the one feature class
+rather than the whole thing.
+
+### Picking a dataset
+
+A workspace export of a whole geodatabase holds many feature classes and tables.
+Metadata is written for one dataset at a time, so the tool asks which one you are
+publishing. Do the others afterwards; each gets its own pair of artifacts.
 
 ## The eight steps
 
@@ -48,6 +71,11 @@ set both coordinate systems: the one the source geodatabase uses (normally
 NAD 1983 UTM Zone 11N) and the one the hosted service uses (normally Web
 Mercator). Confirm these even when the upload filled them in.
 
+A workspace export states its extent in the dataset's own coordinate system, and
+FGDC wants decimal degrees, so the tool converts it for you. It can do that for
+UTM, Web Mercator and geographic coordinates. For anything else it leaves the
+box empty and asks, rather than filling in a number it cannot stand behind.
+
 **5. Lineage.** Every source dataset with its originator, date and scale, then
 every processing step in order with a date. Name the tool and the parameter
 values. "Buffered the layer" is not a process step. "Buffered by 450 m to match
@@ -57,6 +85,14 @@ adds the required sentence to the last step for you.
 **6. Attributes.** The core of the work. Every field needs a plain-English
 definition and a definition source. Fields flagged **needs definition** in red
 are the ones blocking you.
+
+From a workspace export, a lot of this arrives already done. Coded value domains
+and range domains defined in the geodatabase come across as FGDC enumerated and
+range domains, and editor tracking fields are identified from the geodatabase's
+own configuration rather than guessed from their names. If the export included
+the data, each field also shows what is actually in it: how many values, how many
+empty, the range for numbers, the date span for dates, and the distinct values
+for text where there are few enough to list.
 
 Pick the domain type that fits:
 
@@ -107,11 +143,22 @@ upload step.
 
 ## Common questions
 
-**The upload found no fields.** The export was made from a layer rather than the
-feature class, or the metadata style in Pro is set to Item Description, which
-omits the attribute section. Re-export from the feature class in the Catalog
-pane. You can also add fields by hand on the Attributes step, from the real
+**The upload found no fields.** If you uploaded a metadata export, it was
+probably made with the metadata style set to Item Description, which omits the
+attribute section. Export an XML Workspace Document instead; it always carries
+the schema. You can also add fields by hand on the Attributes step, from the real
 schema in Pro. Do not type in a schema from memory.
+
+**My layer has no metadata at all.** That is the normal case and the reason the
+workspace export is the recommended upload. The schema, domains, extent and
+coordinate system all come from the geodatabase, and you write the title,
+abstract, purpose, keywords and lineage.
+
+**It offered me values it saw in the data, instead of just using them.** For
+numbers, the measured range is filled in for you: that is a description of the
+data. For text, the observed values are offered but not applied, because a field
+holding four different names is not necessarily a controlled vocabulary. If it
+is one, click the button and the values are added.
 
 **My coordinate system is not in the list.** Choose **Other / not listed** and
 describe it. Paste the well-known text from Pro layer properties so the

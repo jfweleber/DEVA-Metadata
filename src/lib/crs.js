@@ -346,3 +346,169 @@ export function buildSpref(crs, options = {}) {
     ]]
   ]];
 }
+
+// -----------------------------------------------------------------------------
+// Reprojection to geographic coordinates
+// -----------------------------------------------------------------------------
+// An XML Workspace Document states its extent in the dataset's own coordinate
+// system, usually UTM meters. FGDC requires the bounding box in decimal
+// degrees, so the extent has to be converted rather than asked for. Only the
+// projections DEVA publishes in are handled; anything else returns null and the
+// user is asked for the box instead of being given a wrong one.
+
+const DEGREES = 180 / Math.PI;
+
+/**
+ * Inverse transverse Mercator. Returns { longitude, latitude } in degrees.
+ * Standard Snyder series, accurate to well under a metre inside a UTM zone,
+ * which is far tighter than a bounding box needs.
+ */
+function inverseTransverseMercator(easting, northing, options) {
+  const { semiMajor, flattening, centralMeridian, scaleFactor, falseEasting, falseNorthing } = options;
+
+  const e2 = 2 * flattening - flattening * flattening;
+  const ePrime2 = e2 / (1 - e2);
+  const x = easting - falseEasting;
+  const y = northing - falseNorthing;
+
+  const m = y / scaleFactor;
+  const mu = m / (semiMajor * (1 - e2 / 4 - (3 * e2 * e2) / 64 - (5 * e2 * e2 * e2) / 256));
+  const e1 = (1 - Math.sqrt(1 - e2)) / (1 + Math.sqrt(1 - e2));
+  const e1_2 = e1 * e1;
+  const e1_3 = e1_2 * e1;
+  const e1_4 = e1_3 * e1;
+
+  const phi1 = mu
+    + ((3 * e1) / 2 - (27 * e1_3) / 32) * Math.sin(2 * mu)
+    + ((21 * e1_2) / 16 - (55 * e1_4) / 32) * Math.sin(4 * mu)
+    + ((151 * e1_3) / 96) * Math.sin(6 * mu)
+    + ((1097 * e1_4) / 512) * Math.sin(8 * mu);
+
+  const sinPhi1 = Math.sin(phi1);
+  const cosPhi1 = Math.cos(phi1);
+  const tanPhi1 = Math.tan(phi1);
+
+  const c1 = ePrime2 * cosPhi1 * cosPhi1;
+  const t1 = tanPhi1 * tanPhi1;
+  const n1 = semiMajor / Math.sqrt(1 - e2 * sinPhi1 * sinPhi1);
+  const r1 = (semiMajor * (1 - e2)) / Math.pow(1 - e2 * sinPhi1 * sinPhi1, 1.5);
+  const d = x / (n1 * scaleFactor);
+
+  const d2 = d * d;
+  const d3 = d2 * d;
+  const d4 = d3 * d;
+  const d5 = d4 * d;
+  const d6 = d5 * d;
+
+  const latitude = phi1 - ((n1 * tanPhi1) / r1) * (
+    d2 / 2
+    - ((5 + 3 * t1 + 10 * c1 - 4 * c1 * c1 - 9 * ePrime2) * d4) / 24
+    + ((61 + 90 * t1 + 298 * c1 + 45 * t1 * t1 - 252 * ePrime2 - 3 * c1 * c1) * d6) / 720
+  );
+
+  const longitude = centralMeridian / DEGREES + (
+    d
+    - ((1 + 2 * t1 + c1) * d3) / 6
+    + ((5 - 2 * c1 + 28 * t1 - 3 * c1 * c1 + 8 * ePrime2 + 24 * t1 * t1) * d5) / 120
+  ) / cosPhi1;
+
+  return { longitude: longitude * DEGREES, latitude: latitude * DEGREES };
+}
+
+/**
+ * Inverse spherical Mercator, as used by Web Mercator Auxiliary Sphere.
+ */
+function inverseWebMercator(x, y) {
+  const radius = 6378137;
+  return {
+    longitude: (x / radius) * DEGREES,
+    latitude: (2 * Math.atan(Math.exp(y / radius)) - Math.PI / 2) * DEGREES
+  };
+}
+
+/**
+ * Convert a coordinate in `crs` to decimal degrees.
+ * Returns null when the projection is not one this tool can invert, which is
+ * the signal to ask the user for the bounding box instead of guessing at it.
+ */
+export function toGeographic(x, y, crs) {
+  if (!crs || !Number.isFinite(Number(x)) || !Number.isFinite(Number(y))) return null;
+  const easting = Number(x);
+  const northing = Number(y);
+
+  if (crs.kind === 'geographic') {
+    // Already degrees. Guard against a caller passing projected metres.
+    if (Math.abs(easting) > 180 || Math.abs(northing) > 90) return null;
+    return { longitude: easting, latitude: northing };
+  }
+
+  const datum = DATUMS[crs.datum] || DATUMS.nad83;
+  const semiMajor = Number(datum.semiaxis);
+  const flattening = 1 / Number(datum.denflat);
+
+  const grid = crs.planar && crs.planar.gridsys;
+  if (grid && grid.gridsysn === 'Universal Transverse Mercator') {
+    const parameters = Object.fromEntries(grid.projection[1].map(([name, value]) => [name, Number(value)]));
+    return inverseTransverseMercator(easting, northing, {
+      semiMajor,
+      flattening,
+      centralMeridian: parameters.longcm,
+      scaleFactor: parameters.sfctrmer,
+      falseEasting: parameters.feast,
+      falseNorthing: parameters.fnorth
+    });
+  }
+
+  if (crs.epsg === '3857') return inverseWebMercator(easting, northing);
+
+  return null;
+}
+
+/**
+ * Convert a projected extent to a decimal-degree bounding box. The corners of a
+ * projected rectangle do not map to the extreme latitudes and longitudes of the
+ * geographic rectangle that contains it, so the edges are sampled rather than
+ * just the four corners.
+ */
+export function extentToBoundingBox(extent, crs) {
+  if (!extent || !crs) return null;
+  const { xmin, ymin, xmax, ymax } = extent;
+  const values = [xmin, ymin, xmax, ymax].map(Number);
+  if (values.some((value) => !Number.isFinite(value))) return null;
+
+  // Dense sampling: the northern extreme of a transverse Mercator rectangle sits
+  // near the central meridian rather than at a corner, and a coarse walk misses
+  // it by a few metres. 128 steps costs a few hundred inverse projections, which
+  // is nothing, and lands within a fraction of a metre.
+  const steps = 128;
+  const longitudes = [];
+  const latitudes = [];
+  for (let i = 0; i <= steps; i += 1) {
+    const fx = Number(xmin) + ((Number(xmax) - Number(xmin)) * i) / steps;
+    const fy = Number(ymin) + ((Number(ymax) - Number(ymin)) * i) / steps;
+    for (const point of [
+      toGeographic(fx, Number(ymin), crs),
+      toGeographic(fx, Number(ymax), crs),
+      toGeographic(Number(xmin), fy, crs),
+      toGeographic(Number(xmax), fy, crs)
+    ]) {
+      if (!point) return null;
+      longitudes.push(point.longitude);
+      latitudes.push(point.latitude);
+    }
+  }
+
+  // Round outward. Sampling can miss an extreme that falls between steps by a
+  // few metres, and a bounding box that clips real data is worse than one that
+  // is a fraction of a second too generous.
+  const scale = 1e6;
+  const out = (value, direction) => Number((direction < 0
+    ? Math.floor(value * scale) / scale
+    : Math.ceil(value * scale) / scale).toFixed(6));
+  return {
+    westbc: out(Math.min(...longitudes), -1),
+    eastbc: out(Math.max(...longitudes), 1),
+    northbc: out(Math.max(...latitudes), 1),
+    southbc: out(Math.min(...latitudes), -1)
+  };
+}

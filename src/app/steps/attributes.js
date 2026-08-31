@@ -128,15 +128,92 @@ function domainEditor(fieldRecord) {
   return { node: holder, draw };
 }
 
+/**
+ * What the exported data actually contains for this field. Shown rather than
+ * applied: measured values are offered to the user, who decides whether they
+ * describe a real domain. Turning four observed names into a declared
+ * controlled vocabulary would be inventing a schema the geodatabase never had.
+ */
+function observedPanel(fieldRecord, redrawDomain) {
+  const observed = fieldRecord.observed;
+  if (!observed || !observed.count) return null;
+
+  const parts = [];
+  parts.push(`${observed.count.toLocaleString('en-US')} value${observed.count === 1 ? '' : 's'} in the exported data`);
+  if (observed.nulls) parts.push(`${observed.nulls.toLocaleString('en-US')} empty`);
+  if (observed.min !== null && observed.max !== null) parts.push(`range ${observed.min} to ${observed.max}`);
+  if (observed.dateMin) parts.push(`dates ${observed.dateMin.slice(0, 10)} to ${observed.dateMax.slice(0, 10)}`);
+  if (observed.truncated) parts.push('more than 25 distinct values');
+
+  const children = [el('p', { class: 'hint', style: 'margin:0 0 6px;', text: parts.join(' | ') })];
+
+  if (observed.distinct && observed.distinct.length) {
+    children.push(el('p', { class: 'hint', style: 'margin:0 0 8px;' }, [
+      el('strong', { text: 'Observed values: ' }),
+      el('span', { text: observed.distinct.join(', ') })
+    ]));
+    if (fieldRecord.domainType !== 'edom') {
+      children.push(el('button', {
+        type: 'button',
+        class: 'ghost',
+        text: `Use these ${observed.distinct.length} values as an enumerated domain`,
+        on: {
+          click: () => {
+            fieldRecord.domainType = 'edom';
+            fieldRecord.values = observed.distinct.map((value) => ({
+              value,
+              definition: '',
+              source: fieldRecord.definitionSource || 'Death Valley National Park'
+            }));
+            commit();
+            redrawDomain();
+            toast('Values added. Each one still needs a definition.');
+          }
+        }
+      }));
+    }
+  }
+
+  if (observed.min !== null && observed.max !== null && fieldRecord.domainType !== 'rdom') {
+    children.push(el('button', {
+      type: 'button',
+      class: 'ghost',
+      text: 'Use the observed range as a range domain',
+      on: {
+        click: () => {
+          fieldRecord.domainType = 'rdom';
+          fieldRecord.rangeMin = String(observed.min);
+          fieldRecord.rangeMax = String(observed.max);
+          commit();
+          redrawDomain();
+        }
+      }
+    }));
+  }
+
+  return el('div', { class: 'callout', style: 'margin:10px 0;' }, children);
+}
+
 function fieldCard(fieldRecord, index, redrawAll) {
   const needsDefinition = !clean(fieldRecord.definition);
   const pills = [
     el('span', { class: `pill ${fieldRecord.role}`, text: ROLE_LABEL[fieldRecord.role] || fieldRecord.role }),
     el('span', { class: 'pill', text: fieldRecord.type }),
+    fieldRecord.domainType !== 'udom' ? el('span', { class: 'pill', text: fieldRecord.domainType }) : null,
     needsDefinition ? el('span', { class: 'pill todo', text: 'needs definition' }) : null
   ];
 
   const domain = domainEditor(fieldRecord);
+
+  // The domain editor and the observed-values panel both change when the domain
+  // type changes, so they are redrawn together.
+  const domainHolder = el('div', {});
+  const redrawDomainSection = () => {
+    domain.draw();
+    setChildren(domainHolder, [domain.node, observedPanel(fieldRecord, redrawDomainSection)]);
+  };
+  redrawDomainSection();
+
   const decimalsHolder = el('div', {});
   const drawDecimals = () => {
     setChildren(decimalsHolder, [typeTakesDecimals(fieldRecord.type)
@@ -171,8 +248,8 @@ function fieldCard(fieldRecord, index, redrawAll) {
         { value: 'udom', label: 'Free text (udom)' },
         { value: 'edom', label: 'Enumerated values (edom)' },
         { value: 'rdom', label: 'Numeric range (rdom)' }
-      ], domain.draw)),
-      domain.node,
+      ], redrawDomainSection)),
+      domainHolder,
       el('div', { class: 'grid-2', style: 'margin-top:12px;' }, [
         boundCheckbox(fieldRecord, 'includeInXml', 'Document in the FGDC XML'),
         boundCheckbox(fieldRecord, 'includeInHtml', 'Show in the Portal attributes table')

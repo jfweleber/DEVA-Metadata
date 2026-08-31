@@ -98,6 +98,19 @@ function codeValue(node) {
   return cleanLine(node.attrs.value || node.attrs.code || '');
 }
 
+/**
+ * Decide which kind of document a file holds before committing to a parser.
+ * Only the head of the file is needed, which matters because a workspace export
+ * can be hundreds of megabytes.
+ */
+export function detectDocumentKind(headText) {
+  const head = String(headText).slice(0, 8000);
+  if (/<(\w+:)?Workspace[\s>]/.test(head) || /<WorkspaceDefinition/.test(head)) return 'workspace';
+  if (/<(\w+:)?(MD_Metadata|MI_Metadata)[\s>]/.test(head)) return 'metadata';
+  if (/<metadata[\s>]/i.test(head)) return 'metadata';
+  return 'unknown';
+}
+
 function detectFormat(root) {
   const name = root.local.toLowerCase();
   if (name === 'md_metadata' || name === 'mi_metadata') return 'ISO 19139';

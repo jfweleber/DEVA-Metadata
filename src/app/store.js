@@ -15,8 +15,20 @@ const listeners = new Set();
 export const state = {
   project: createProject(),
   step: 'upload',
-  hasImport: false
+  hasImport: false,
+  // The parsed workspace document, when one was uploaded. Held only for the
+  // dataset picker and never written to storage, since a workspace export can
+  // be very large.
+  workspace: null
 };
+
+/**
+ * Hold a parsed workspace document so the user can pick a dataset from it.
+ */
+export function setWorkspace(workspace) {
+  state.workspace = workspace;
+  notify('workspace');
+}
 
 /**
  * Subscribe to state changes. Returns an unsubscribe function.
@@ -96,6 +108,7 @@ export function clearDraft() {
   }
   state.project = createProject();
   state.hasImport = false;
+  state.workspace = null;
   state.step = 'upload';
   notify('project');
 }

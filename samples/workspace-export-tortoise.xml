@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<esri:Workspace xmlns:esri="http://www.esri.com/schemas/ArcGIS/10.8" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <WorkspaceDefinition xsi:type="esri:WorkspaceDefinition">
+    <WorkspaceType>esriLocalDatabaseWorkspace</WorkspaceType>
+    <Version></Version>
+    <Domains xsi:type="esri:ArrayOfDomain">
+      <Domain xsi:type="esri:CodedValueDomain">
+        <DomainName>DEVA_Habitat_Category</DomainName>
+        <FieldType>esriFieldTypeString</FieldType>
+        <MergePolicy>esriMPTDefaultValue</MergePolicy>
+        <SplitPolicy>esriSPTDuplicate</SplitPolicy>
+        <Description>Core habitat quality classes from the focal density analysis.</Description>
+        <Owner></Owner>
+        <CodedValues xsi:type="esri:ArrayOfCodedValue">
+          <CodedValue xsi:type="esri:CodedValue">
+            <Name>Moderate Core</Name>
+            <Code xsi:type="xs:string">MOD</Code>
+          </CodedValue>
+          <CodedValue xsi:type="esri:CodedValue">
+            <Name>Optimal Core</Name>
+            <Code xsi:type="xs:string">OPT</Code>
+          </CodedValue>
+        </CodedValues>
+      </Domain>
+      <Domain xsi:type="esri:RangeDomain">
+        <DomainName>DEVA_HSI_Score</DomainName>
+        <FieldType>esriFieldTypeDouble</FieldType>
+        <MergePolicy>esriMPTDefaultValue</MergePolicy>
+        <SplitPolicy>esriSPTDuplicate</SplitPolicy>
+        <Description>Valid habitat suitability index scores.</Description>
+        <Owner></Owner>
+        <MaxValue xsi:type="xs:double">3</MaxValue>
+        <MinValue xsi:type="xs:double">0</MinValue>
+      </Domain>
+    </Domains>
+    <DatasetDefinitions xsi:type="esri:ArrayOfDataElement">
+      <DataElement xsi:type="esri:DEFeatureClass">
+        <CatalogPath>/FC=DEVA_GIS_Desert_Tortoise_Core_Habitat</CatalogPath>
+        <Name>DEVA_GIS_Desert_Tortoise_Core_Habitat</Name>
+        <MetadataRetrieved>false</MetadataRetrieved>
+        <DatasetType>esriDTFeatureClass</DatasetType>
+        <DSID>12</DSID>
+        <Versioned>false</Versioned>
+        <CanVersion>false</CanVersion>
+        <HasOID>true</HasOID>
+        <OIDFieldName>OBJECTID</OIDFieldName>
+        <Fields xsi:type="esri:Fields">
+          <FieldArray xsi:type="esri:ArrayOfField">
+            <Field xsi:type="esri:Field">
+              <Name>OBJECTID</Name>
+              <Type>esriFieldTypeOID</Type>
+              <IsNullable>false</IsNullable>
+              <Length>4</Length>
+              <Precision>10</Precision>
+              <Scale>0</Scale>
+              <Required>true</Required>
+              <Editable>false</Editable>
+              <AliasName>OBJECTID</AliasName>
+              <ModelName>OBJECTID</ModelName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>Shape</Name>
+              <Type>esriFieldTypeGeometry</Type>
+              <IsNullable>true</IsNullable>
+              <Length>0</Length>
+              <Precision>0</Precision>
+              <Scale>0</Scale>
+              <Required>true</Required>
+              <AliasName>Shape</AliasName>
+              <ModelName>Shape</ModelName>
+              <GeometryDef xsi:type="esri:GeometryDef">
+                <AvgNumPoints>0</AvgNumPoints>
+                <GeometryType>esriGeometryPolygon</GeometryType>
+                <HasM>false</HasM>
+                <HasZ>false</HasZ>
+                <SpatialReference xsi:type="esri:ProjectedCoordinateSystem">
+                  <WKT>PROJCS[&quot;NAD_1983_UTM_Zone_11N&quot;,GEOGCS[&quot;GCS_North_American_1983&quot;,DATUM[&quot;D_North_American_1983&quot;,SPHEROID[&quot;GRS_1980&quot;,6378137.0,298.257222101]],PRIMEM[&quot;Greenwich&quot;,0.0],UNIT[&quot;Degree&quot;,0.0174532925199433]],PROJECTION[&quot;Transverse_Mercator&quot;],PARAMETER[&quot;False_Easting&quot;,500000.0],PARAMETER[&quot;Central_Meridian&quot;,-117.0],UNIT[&quot;Meter&quot;,1.0]]</WKT>
+                  <HighPrecision>true</HighPrecision>
+                  <WKID>26911</WKID>
+                  <LatestWKID>26911</LatestWKID>
+                </SpatialReference>
+              </GeometryDef>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>Habitat_Category</Name>
+              <Type>esriFieldTypeString</Type>
+              <IsNullable>true</IsNullable>
+              <Length>50</Length>
+              <Precision>0</Precision>
+              <Scale>0</Scale>
+              <Required>false</Required>
+              <AliasName>Habitat Category</AliasName>
+              <ModelName>Habitat_Category</ModelName>
+              <DomainFixed>false</DomainFixed>
+              <Domain xsi:type="esri:CodedValueDomain">
+                <DomainName>DEVA_Habitat_Category</DomainName>
+                <FieldType>esriFieldTypeString</FieldType>
+                <Description>Core habitat quality classes from the focal density analysis.</Description>
+                <CodedValues xsi:type="esri:ArrayOfCodedValue">
+                  <CodedValue xsi:type="esri:CodedValue">
+                    <Name>Moderate Core</Name>
+                    <Code xsi:type="xs:string">MOD</Code>
+                  </CodedValue>
+                  <CodedValue xsi:type="esri:CodedValue">
+                    <Name>Optimal Core</Name>
+                    <Code xsi:type="xs:string">OPT</Code>
+                  </CodedValue>
+                </CodedValues>
+              </Domain>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>HSI_Mean</Name>
+              <Type>esriFieldTypeDouble</Type>
+              <IsNullable>true</IsNullable>
+              <Length>8</Length>
+              <Precision>38</Precision>
+              <Scale>8</Scale>
+              <Required>false</Required>
+              <AliasName>Mean HSI Score</AliasName>
+              <ModelName>HSI_Mean</ModelName>
+              <DomainName>DEVA_HSI_Score</DomainName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>Survey_Date</Name>
+              <Type>esriFieldTypeDate</Type>
+              <IsNullable>true</IsNullable>
+              <Length>8</Length>
+              <Precision>0</Precision>
+              <Scale>0</Scale>
+              <Required>false</Required>
+              <AliasName>Survey Date</AliasName>
+              <ModelName>Survey_Date</ModelName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>ACRES</Name>
+              <Type>esriFieldTypeDouble</Type>
+              <IsNullable>true</IsNullable>
+              <Length>8</Length>
+              <Precision>38</Precision>
+              <Scale>8</Scale>
+              <Required>false</Required>
+              <AliasName>Area (Acres)</AliasName>
+              <ModelName>ACRES</ModelName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>Creator</Name>
+              <Type>esriFieldTypeString</Type>
+              <IsNullable>true</IsNullable>
+              <Length>128</Length>
+              <AliasName>Creator</AliasName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>CreationDate</Name>
+              <Type>esriFieldTypeDate</Type>
+              <IsNullable>true</IsNullable>
+              <Length>8</Length>
+              <AliasName>CreationDate</AliasName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>Editor</Name>
+              <Type>esriFieldTypeString</Type>
+              <IsNullable>true</IsNullable>
+              <Length>128</Length>
+              <AliasName>Editor</AliasName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>EditDate</Name>
+              <Type>esriFieldTypeDate</Type>
+              <IsNullable>true</IsNullable>
+              <Length>8</Length>
+              <AliasName>EditDate</AliasName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>Shape_Length</Name>
+              <Type>esriFieldTypeDouble</Type>
+              <IsNullable>true</IsNullable>
+              <Length>8</Length>
+              <Precision>0</Precision>
+              <Scale>0</Scale>
+              <Required>true</Required>
+              <Editable>false</Editable>
+              <AliasName>Shape_Length</AliasName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>Shape_Area</Name>
+              <Type>esriFieldTypeDouble</Type>
+              <IsNullable>true</IsNullable>
+              <Length>8</Length>
+              <Precision>0</Precision>
+              <Scale>0</Scale>
+              <Required>true</Required>
+              <Editable>false</Editable>
+              <AliasName>Shape_Area</AliasName>
+            </Field>
+          </FieldArray>
+        </Fields>
+        <CLSID>{52353152-891A-11D0-BEC6-00805F7C4268}</CLSID>
+        <EXTCLSID></EXTCLSID>
+        <AliasName>Desert Tortoise Core Habitat</AliasName>
+        <ModelName></ModelName>
+        <HasGlobalID>false</HasGlobalID>
+        <GlobalIDFieldName></GlobalIDFieldName>
+        <RasterFieldName></RasterFieldName>
+        <EditorTrackingEnabled>true</EditorTrackingEnabled>
+        <CreatorFieldName>Creator</CreatorFieldName>
+        <CreatedAtFieldName>CreationDate</CreatedAtFieldName>
+        <EditorFieldName>Editor</EditorFieldName>
+        <EditedAtFieldName>EditDate</EditedAtFieldName>
+        <IsTimeInUTC>true</IsTimeInUTC>
+        <FeatureType>esriFTSimple</FeatureType>
+        <ShapeType>esriGeometryPolygon</ShapeType>
+        <ShapeFieldName>Shape</ShapeFieldName>
+        <HasM>false</HasM>
+        <HasZ>false</HasZ>
+        <HasSpatialIndex>true</HasSpatialIndex>
+        <AreaFieldName>Shape_Area</AreaFieldName>
+        <LengthFieldName>Shape_Length</LengthFieldName>
+        <Extent xsi:type="esri:EnvelopeN">
+          <XMin>452113.4823</XMin>
+          <YMin>3985221.6608</YMin>
+          <XMax>612884.9177</XMax>
+          <YMax>4118330.2241</YMax>
+          <SpatialReference xsi:type="esri:ProjectedCoordinateSystem">
+            <WKT>PROJCS[&quot;NAD_1983_UTM_Zone_11N&quot;]</WKT>
+            <WKID>26911</WKID>
+            <LatestWKID>26911</LatestWKID>
+          </SpatialReference>
+        </Extent>
+        <SpatialReference xsi:type="esri:ProjectedCoordinateSystem">
+          <WKT>PROJCS[&quot;NAD_1983_UTM_Zone_11N&quot;]</WKT>
+          <WKID>26911</WKID>
+          <LatestWKID>26911</LatestWKID>
+        </SpatialReference>
+      </DataElement>
+      <DataElement xsi:type="esri:DETable">
+        <CatalogPath>/OC=DEVA_Tortoise_Survey_Events</CatalogPath>
+        <Name>DEVA_Tortoise_Survey_Events</Name>
+        <MetadataRetrieved>true</MetadataRetrieved>
+        <Metadata xsi:type="esri:XmlPropertySet">
+          <XmlDoc>&lt;metadata&gt;&lt;dataIdInfo&gt;&lt;idCitation&gt;&lt;resTitle&gt;DEVA Tortoise Survey Events&lt;/resTitle&gt;&lt;/idCitation&gt;&lt;idAbs&gt;Field survey events recorded during desert tortoise monitoring, one record per survey visit.&lt;/idAbs&gt;&lt;idPurp&gt;Supports effort tracking for tortoise monitoring.&lt;/idPurp&gt;&lt;/dataIdInfo&gt;&lt;/metadata&gt;</XmlDoc>
+        </Metadata>
+        <DatasetType>esriDTTable</DatasetType>
+        <DSID>13</DSID>
+        <HasOID>true</HasOID>
+        <OIDFieldName>OBJECTID</OIDFieldName>
+        <Fields xsi:type="esri:Fields">
+          <FieldArray xsi:type="esri:ArrayOfField">
+            <Field xsi:type="esri:Field">
+              <Name>OBJECTID</Name>
+              <Type>esriFieldTypeOID</Type>
+              <Length>4</Length>
+              <AliasName>OBJECTID</AliasName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>Observer</Name>
+              <Type>esriFieldTypeString</Type>
+              <Length>75</Length>
+              <AliasName>Observer</AliasName>
+            </Field>
+            <Field xsi:type="esri:Field">
+              <Name>Tortoise_Count</Name>
+              <Type>esriFieldTypeSmallInteger</Type>
+              <Length>2</Length>
+              <AliasName>Tortoise Count</AliasName>
+            </Field>
+          </FieldArray>
+        </Fields>
+        <AliasName>Tortoise Survey Events</AliasName>
+        <EditorTrackingEnabled>false</EditorTrackingEnabled>
+      </DataElement>
+    </DatasetDefinitions>
+  </WorkspaceDefinition>
+  <WorkspaceData xsi:type="esri:WorkspaceData">
+    <DatasetData xsi:type="esri:TableData">
+      <DatasetName>DEVA_GIS_Desert_Tortoise_Core_Habitat</DatasetName>
+      <DatasetType>esriDTFeatureClass</DatasetType>
+      <Data xsi:type="esri:RecordSet">
+        <Fields xsi:type="esri:Fields">
+          <FieldArray xsi:type="esri:ArrayOfField">
+            <Field xsi:type="esri:Field"><Name>OBJECTID</Name><Type>esriFieldTypeOID</Type></Field>
+            <Field xsi:type="esri:Field"><Name>Shape</Name><Type>esriFieldTypeGeometry</Type></Field>
+            <Field xsi:type="esri:Field"><Name>Habitat_Category</Name><Type>esriFieldTypeString</Type></Field>
+            <Field xsi:type="esri:Field"><Name>HSI_Mean</Name><Type>esriFieldTypeDouble</Type></Field>
+            <Field xsi:type="esri:Field"><Name>Survey_Date</Name><Type>esriFieldTypeDate</Type></Field>
+            <Field xsi:type="esri:Field"><Name>ACRES</Name><Type>esriFieldTypeDouble</Type></Field>
+            <Field xsi:type="esri:Field"><Name>Creator</Name><Type>esriFieldTypeString</Type></Field>
+            <Field xsi:type="esri:Field"><Name>CreationDate</Name><Type>esriFieldTypeDate</Type></Field>
+            <Field xsi:type="esri:Field"><Name>Editor</Name><Type>esriFieldTypeString</Type></Field>
+            <Field xsi:type="esri:Field"><Name>EditDate</Name><Type>esriFieldTypeDate</Type></Field>
+            <Field xsi:type="esri:Field"><Name>Shape_Length</Name><Type>esriFieldTypeDouble</Type></Field>
+            <Field xsi:type="esri:Field"><Name>Shape_Area</Name><Type>esriFieldTypeDouble</Type></Field>
+          </FieldArray>
+        </Fields>
+        <Records xsi:type="esri:ArrayOfRecord">
+          <Record xsi:type="esri:Record">
+            <Values xsi:type="esri:ArrayOfValue">
+              <Value xsi:type="xs:int">1</Value>
+              <Value xsi:type="esri:PolygonN">
+                <HasID>false</HasID><HasZ>false</HasZ><HasM>false</HasM>
+                <Extent xsi:type="esri:EnvelopeN"><XMin>452113.4823</XMin><YMin>3985221.6608</YMin><XMax>452500</XMax><YMax>3985600</YMax></Extent>
+                <RingArray xsi:type="esri:ArrayOfRing">
+                  <Ring xsi:type="esri:Ring">
+                    <PointArray xsi:type="esri:ArrayOfPoint">
+                      <Point xsi:type="esri:PointN"><X>452113.4823</X><Y>3985221.6608</Y></Point>
+                      <Point xsi:type="esri:PointN"><X>452500</X><Y>3985221.6608</Y></Point>
+                      <Point xsi:type="esri:PointN"><X>452500</X><Y>3985600</Y></Point>
+                      <Point xsi:type="esri:PointN"><X>452113.4823</X><Y>3985221.6608</Y></Point>
+                    </PointArray>
+                  </Ring>
+                </RingArray>
+              </Value>
+              <Value xsi:type="xs:string">OPT</Value>
+              <Value xsi:type="xs:double">2.7431</Value>
+              <Value xsi:type="xs:dateTime">2025-04-11T00:00:00</Value>
+              <Value xsi:type="xs:double">36.114</Value>
+              <Value xsi:type="xs:string">jweleber</Value>
+              <Value xsi:type="xs:dateTime">2026-01-21T14:02:11</Value>
+              <Value xsi:type="xs:string">jweleber</Value>
+              <Value xsi:type="xs:dateTime">2026-01-21T14:02:11</Value>
+              <Value xsi:type="xs:double">1834.22</Value>
+              <Value xsi:type="xs:double">146215.9</Value>
+            </Values>
+          </Record>
+          <Record xsi:type="esri:Record">
+            <Values xsi:type="esri:ArrayOfValue">
+              <Value xsi:type="xs:int">2</Value>
+              <Value xsi:type="esri:PolygonN">
+                <RingArray xsi:type="esri:ArrayOfRing"><Ring xsi:type="esri:Ring"><PointArray xsi:type="esri:ArrayOfPoint">
+                  <Point xsi:type="esri:PointN"><X>500000</X><Y>4000000</Y></Point>
+                </PointArray></Ring></RingArray>
+              </Value>
+              <Value xsi:type="xs:string">MOD</Value>
+              <Value xsi:type="xs:double">2.1088</Value>
+              <Value xsi:type="xs:dateTime">2025-04-12T00:00:00</Value>
+              <Value xsi:type="xs:double">912.5</Value>
+              <Value xsi:type="xs:string">jweleber</Value>
+              <Value xsi:type="xs:dateTime">2026-01-21T14:02:11</Value>
+              <Value xsi:type="xs:string">rsmith</Value>
+              <Value xsi:type="xs:dateTime">2026-02-02T09:15:40</Value>
+              <Value xsi:type="xs:double">1201.4</Value>
+              <Value xsi:type="xs:double">72760.2</Value>
+            </Values>
+          </Record>
+          <Record xsi:type="esri:Record">
+            <Values xsi:type="esri:ArrayOfValue">
+              <Value xsi:type="xs:int">3</Value>
+              <Value xsi:type="esri:PolygonN"><RingArray xsi:type="esri:ArrayOfRing"><Ring xsi:type="esri:Ring"><PointArray xsi:type="esri:ArrayOfPoint"><Point xsi:type="esri:PointN"><X>600000</X><Y>4100000</Y></Point></PointArray></Ring></RingArray></Value>
+              <Value xsi:type="xs:string">OPT</Value>
+              <Value xsi:type="xs:double">2.9902</Value>
+              <Value xsi:type="xs:dateTime">2025-05-03T00:00:00</Value>
+              <Value xsi:type="xs:double">18422.53</Value>
+              <Value xsi:type="xs:string">jweleber</Value>
+              <Value xsi:type="xs:dateTime">2026-01-21T14:02:11</Value>
+              <Value xsi:type="xs:string">jweleber</Value>
+              <Value xsi:type="xs:dateTime">2026-01-21T14:02:11</Value>
+              <Value xsi:type="xs:double">9921.8</Value>
+              <Value xsi:type="xs:double">1468933.1</Value>
+            </Values>
+          </Record>
+          <Record xsi:type="esri:Record">
+            <Values xsi:type="esri:ArrayOfValue">
+              <Value xsi:type="xs:int">4</Value>
+              <Value xsi:type="esri:PolygonN"><RingArray xsi:type="esri:ArrayOfRing"><Ring xsi:type="esri:Ring"><PointArray xsi:type="esri:ArrayOfPoint"><Point xsi:type="esri:PointN"><X>520000</X><Y>4050000</Y></Point></PointArray></Ring></RingArray></Value>
+              <Value xsi:type="xs:string">MOD</Value>
+              <Value xsi:type="xs:double">2.0100</Value>
+              <Value xsi:type="xs:dateTime">2025-05-19T00:00:00</Value>
+              <Value xsi:type="xs:double">0.01</Value>
+              <Value xsi:type="xs:string">rsmith</Value>
+              <Value xsi:type="xs:dateTime">2026-01-22T08:00:00</Value>
+              <Value xsi:type="xs:string">rsmith</Value>
+              <Value xsi:type="xs:dateTime">2026-01-22T08:00:00</Value>
+              <Value xsi:type="xs:double">14.9</Value>
+              <Value xsi:type="xs:double">40.5</Value>
+            </Values>
+          </Record>
+        </Records>
+      </Data>
+    </DatasetData>
+    <DatasetData xsi:type="esri:TableData">
+      <DatasetName>DEVA_Tortoise_Survey_Events</DatasetName>
+      <DatasetType>esriDTTable</DatasetType>
+      <Data xsi:type="esri:RecordSet">
+        <Fields xsi:type="esri:Fields">
+          <FieldArray xsi:type="esri:ArrayOfField">
+            <Field xsi:type="esri:Field"><Name>OBJECTID</Name><Type>esriFieldTypeOID</Type></Field>
+            <Field xsi:type="esri:Field"><Name>Observer</Name><Type>esriFieldTypeString</Type></Field>
+            <Field xsi:type="esri:Field"><Name>Tortoise_Count</Name><Type>esriFieldTypeSmallInteger</Type></Field>
+          </FieldArray>
+        </Fields>
+        <Records xsi:type="esri:ArrayOfRecord">
+          <Record xsi:type="esri:Record"><Values xsi:type="esri:ArrayOfValue">
+            <Value xsi:type="xs:int">1</Value><Value xsi:type="xs:string">J. Weleber</Value><Value xsi:type="xs:short">3</Value>
+          </Values></Record>
+          <Record xsi:type="esri:Record"><Values xsi:type="esri:ArrayOfValue">
+            <Value xsi:type="xs:int">2</Value><Value xsi:type="xs:string">R. Smith</Value><Value xsi:type="xs:short">0</Value>
+          </Values></Record>
+        </Records>
+      </Data>
+    </DatasetData>
+  </WorkspaceData>
+</esri:Workspace>

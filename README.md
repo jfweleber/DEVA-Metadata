@@ -3,9 +3,9 @@
 Online metadata builder for Death Valley National Park GIS staff, published at
 **[metadata.weleber.net](https://metadata.weleber.net)**.
 
-Upload the metadata XML that ArcGIS Pro exports for a layer, answer the handful
-of questions FGDC needs and ArcGIS does not collect, and download the two
-artifacts the DEVA publishing standard requires:
+Upload what ArcGIS gives you, answer the handful of questions FGDC needs and
+ArcGIS does not collect, and download the two artifacts the DEVA publishing
+standard requires:
 
 | Artifact | What it is | Where it goes |
 |---|---|---|
@@ -14,14 +14,29 @@ artifacts the DEVA publishing standard requires:
 
 Both are authored together. Neither ships alone.
 
+## Two kinds of upload
+
+Most geodatabases and layers have little or no metadata, so the tool is built
+around the export that does not depend on any: the **XML Workspace Document**.
+
+| Upload | Where it comes from | What it gives |
+|---|---|---|
+| **XML Workspace Document** (recommended) | Catalog pane, right-click a geodatabase or feature class, Export, XML Workspace Document | The real field schema, coded value and range domains, geometry type, spatial reference, extent, and which fields are editor tracking fields. Exported with the data, it also gives a true feature count and measured value ranges. |
+| **Metadata export** | Right-click the layer, View Metadata, Export | Whatever a person already wrote: title, abstract, purpose, keywords, lineage. Reads ArcGIS metadata format, FGDC CSDGM and ISO 19139. |
+
+A workspace that happens to carry metadata gets both: the schema from the
+geodatabase, the words from the metadata record. Where the two disagree about a
+schema fact, the workspace wins, because it is the data itself.
+
 ## How it works
 
-1. **Upload.** Drop in the `.xml` ArcGIS Pro exported. The tool reads ArcGIS
-   metadata format, FGDC CSDGM and ISO 19139 records, and pulls out the field
-   schema, extent, coordinate system, feature count, keywords and lineage.
+1. **Upload.** Drop in the `.xml`. A workspace export is streamed in chunks, so
+   a multi-hundred-megabyte export with data does not have to fit in memory. If
+   it holds several datasets, you pick the one you are publishing.
 2. **Answer what is missing.** The wizard flags exactly what the export did not
-   carry. In practice that is field definitions, domains, the purpose statement
-   and lineage detail, which is what reviewers actually check.
+   carry. For a workspace with no metadata that is the title, abstract, purpose,
+   keywords and lineage; for any export it is the field definitions, which
+   ArcGIS does not require and FGDC does.
 3. **Review.** Live validation against the FGDC required elements and the DEVA
    deliverable checklist, with a rendered preview of the Portal snippet.
 4. **Download.** The XML file and the HTML snippet, plus a `.json` draft you can
@@ -52,6 +67,11 @@ repository:
   the Portal attributes table (Sections 5.1 and 5.2).
 - When the analysis and service coordinate systems differ, the final process
   step says so in the wording the standard specifies (Section 2.3).
+- Measurements of the data are used; guesses about it are not. A workspace
+  extent is reprojected into the decimal degrees FGDC wants, and numeric fields
+  get the range actually present in the data. Text values are shown for you to
+  accept rather than silently declared a controlled vocabulary, because four
+  observed names do not make a field a coded domain.
 - `<spref>` carries real FGDC grid or projection parameters, not just a
   coordinate system name, so the record validates rather than merely reading
   well.
@@ -86,14 +106,17 @@ assets/app.css          styling, using the Section 3.2 palette
 src/lib/                pure logic, no DOM, unit tested
   xml.js                dependency-free XML parser and writer
   text.js               house style: em dash rule, dates, escaping
-  crs.js                coordinate system registry and FGDC spref builder
+  crs.js                CRS registry, FGDC spref builder, reprojection
   model.js              the project model and DEVA constants
-  import.js             reads ArcGIS Pro, FGDC and ISO records
+  import.js             reads ArcGIS Pro, FGDC and ISO metadata records
+  workspace.js          reads XML Workspace Documents into a project
+  workspace-data.js     streaming scanner for the data half of a workspace
+  workspace-reader.js   ties the two together over a chunked stream
   fgdc.js               generates the FGDC XML
   html.js               generates the Portal snippet
   validate.js           FGDC required elements plus the Section 8 checklist
 src/app/                the wizard UI
-samples/                an example ArcGIS Pro export for training and tests
+samples/                example exports, both kinds, for training and tests
 tests/                  unit tests
 docs/                   user guide and deployment notes
 CLAUDE.md               the DEVA GIS publishing standard this tool implements
