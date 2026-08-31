@@ -11,9 +11,10 @@ import { state, setStep } from '../store.js';
 import { generateFgdcXml } from '../../lib/fgdc.js';
 import { generateHtmlSnippet } from '../../lib/html.js';
 import { validateProject, deliverableChecklist } from '../../lib/validate.js';
-import { slugify } from '../../lib/text.js';
+import { slugify, clean } from '../../lib/text.js';
 
 const STEP_LABELS = {
+  describe: 'Describe',
   identification: 'Identification',
   contact: 'Identification',
   keywords: 'Keywords',
@@ -168,6 +169,34 @@ export function render(context) {
     tabBar,
     outputHolder,
     downloads,
+
+    // Section 4.1: the item-level fields Portal asks for, which live outside
+    // both artifacts and otherwise get typed from scratch.
+    (clean(project.summary) || clean(project.portalTags)) ? el('div', {}, [
+      el('h3', { text: 'Portal item fields' }),
+      el('p', { class: 'hint', text: 'These go in the item page fields, not in either file. Copy them across when you fill in the item description.' }),
+      el('table', { class: 'data' }, [
+        el('tr', {}, [el('th', { text: 'Field' }), el('th', { text: 'Value' }), el('th', { text: '' })]),
+        ...[
+          ['Summary', project.summary],
+          ['Tags', project.portalTags],
+          ['Credits', (project.contact || {}).credits]
+        ].filter(([, value]) => clean(value)).map(([label, value]) => el('tr', {}, [
+          el('td', { text: label }),
+          el('td', { text: clean(value) }),
+          el('td', {}, [el('button', {
+            type: 'button',
+            class: 'ghost',
+            text: 'Copy',
+            on: {
+              click: async () => {
+                toast(await copyText(clean(value)) ? `${label} copied` : 'Copy failed');
+              }
+            }
+          })])
+        ]))
+      ])
+    ]) : null,
 
     el('h3', { text: 'Publishing steps' }),
     el('ol', {}, [

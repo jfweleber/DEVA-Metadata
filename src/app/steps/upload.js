@@ -70,6 +70,11 @@ function importReport(project, context) {
       el('h3', { text: 'Not in the file, you will be asked' }),
       el('ul', {}, summary.missing.map((item) => el('li', { text: item })))
     ]) : null,
+    el('div', { class: 'callout' }, [
+      el('p', {
+        html: '<strong>Next: describe the layer.</strong> Answer a page of mostly pick-list questions and the tool writes the abstract, purpose, summary, keywords, tags, use limitations and a first pass at the lineage. You review and edit all of it afterwards.'
+      })
+    ]),
     needsDefinition.length ? el('div', { class: 'callout warn' }, [
       el('p', {
         html: `<strong>${needsDefinition.length} field${needsDefinition.length === 1 ? '' : 's'} need a plain-English definition:</strong> `
@@ -79,8 +84,8 @@ function importReport(project, context) {
     el('div', { class: 'actions' }, [
       el('button', {
         type: 'button',
-        text: 'Continue to Identification',
-        on: { click: () => setStep('identification') }
+        text: 'Continue: answer a few questions',
+        on: { click: () => setStep('describe') }
       }),
       el('div', {}, [
         state.workspace && state.workspace.datasets.length > 1 ? el('button', {

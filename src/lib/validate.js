@@ -13,6 +13,7 @@
 
 import { clean, cleanLine, findStyleIssues, toFgdcDate } from './text.js';
 import { NPS_USE_CONSTRAINTS, typeTakesDecimals } from './model.js';
+import { countDraftDefinitions } from './compose.js';
 import { crsNoteFor, resolvedProcessSteps } from './fgdc.js';
 
 const ERROR = 'error';
@@ -288,6 +289,16 @@ export function validateProject(project) {
     issues.push(issue(WARNING, 'attributes', 'Entity description is empty.'));
   }
   checkFields(project, issues);
+
+  // --- Suggested wording still unreviewed -----------------------------------
+  // Boilerplate nobody read is exactly what gets caught in review, so it is
+  // called out by name rather than left to be noticed.
+  const drafts = countDraftDefinitions(project);
+  if (drafts) {
+    issues.push(issue(WARNING, 'attributes',
+      `${drafts} field definition${drafts === 1 ? ' is' : 's are'} still the suggested wording.`,
+      'Open each one, check it is true of your data, and edit it so it says something the field name does not.'));
+  }
 
   // --- Metadata record ------------------------------------------------------
   if (!toFgdcDate(project.metadataDate)) {

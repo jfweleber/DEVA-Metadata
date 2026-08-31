@@ -200,7 +200,11 @@ function fieldCard(fieldRecord, index, redrawAll) {
     el('span', { class: `pill ${fieldRecord.role}`, text: ROLE_LABEL[fieldRecord.role] || fieldRecord.role }),
     el('span', { class: 'pill', text: fieldRecord.type }),
     fieldRecord.domainType !== 'udom' ? el('span', { class: 'pill', text: fieldRecord.domainType }) : null,
-    needsDefinition ? el('span', { class: 'pill todo', text: 'needs definition' }) : null
+    needsDefinition ? el('span', { class: 'pill todo', text: 'needs definition' }) : null,
+    // A suggested definition is not a written one until somebody has read it.
+    fieldRecord.definitionDraft && !needsDefinition
+      ? el('span', { class: 'pill editor', text: 'suggested, review it' })
+      : null
   ];
 
   const domain = domainEditor(fieldRecord);
@@ -223,7 +227,8 @@ function fieldCard(fieldRecord, index, redrawAll) {
   };
   drawDecimals();
 
-  const card = el('details', { class: 'field-card', open: needsDefinition && fieldRecord.role === 'user' }, [
+  const card = el('details', { class: 'field-card', open: needsDefinition && fieldRecord.role === 'user' });
+  card.append(...[
     el('summary', {}, [
       el('span', { class: 'field-name', text: fieldRecord.name || '(unnamed)' }),
       ...pills.filter(Boolean)
@@ -239,8 +244,23 @@ function fieldCard(fieldRecord, index, redrawAll) {
       field('Definition', boundInput(fieldRecord, 'definition', {
         multiline: true,
         rows: 2,
-        placeholder: 'What the values represent. Not a restatement of the field name.'
+        placeholder: 'What the values represent. Not a restatement of the field name.',
+        // Touching the text means a person has taken responsibility for it, so
+        // it stops being flagged as a suggestion.
+        onInput: () => {
+          if (fieldRecord.definitionDraft) {
+            fieldRecord.definitionDraft = false;
+            const pill = [...card.querySelectorAll('summary .pill')]
+              .find((node) => node.textContent.startsWith('suggested'));
+            if (pill) pill.remove();
+          }
+        }
       })),
+      fieldRecord.definitionDraft ? el('p', {
+        class: 'hint',
+        style: 'margin-top:-8px;',
+        text: 'This wording was suggested from the field name. Check that it is true of your data, and edit it so it says something the name does not.'
+      }) : null,
       field('Definition source', boundInput(fieldRecord, 'definitionSource', {
         placeholder: 'Death Valley National Park, ESRI, or the source agency'
       })),

@@ -33,17 +33,41 @@ schema fact, the workspace wins, because it is the data itself.
 1. **Upload.** Drop in the `.xml`. A workspace export is streamed in chunks, so
    a multi-hundred-megabyte export with data does not have to fit in memory. If
    it holds several datasets, you pick the one you are publishing.
-2. **Answer what is missing.** The wizard flags exactly what the export did not
-   carry. For a workspace with no metadata that is the title, abstract, purpose,
-   keywords and lineage; for any export it is the field definitions, which
-   ArcGIS does not require and FGDC does.
-3. **Review.** Live validation against the FGDC required elements and the DEVA
+2. **Answer a page of questions and let it write.** The Describe step asks what
+   the layer is, what it is for, how it was collected, what its limits are and
+   whether it shows sensitive locations. Most of it is picking from lists. From
+   those answers plus the facts already read from the file, it writes the
+   abstract, purpose, Portal summary, tags, theme and place keywords, ISO topic
+   category, access constraints, use limitations, data quality section,
+   methodology and a first draft of the lineage steps.
+3. **Review and fill the gaps.** Everything drafted is editable on the steps
+   that follow, and the wizard flags what nobody can write for you: the field
+   definitions that FGDC requires and ArcGIS does not.
+4. **Check.** Live validation against the FGDC required elements and the DEVA
    deliverable checklist, with a rendered preview of the Portal snippet.
-4. **Download.** The XML file and the HTML snippet, plus a `.json` draft you can
+5. **Download.** The XML file and the HTML snippet, plus a `.json` draft you can
    reopen later.
 
 Nothing is uploaded anywhere. Parsing, generation and validation all run in the
 browser, so an unpublished dataset export never leaves the machine it is on.
+
+## Writing the metadata for you
+
+Staff will not write an abstract. They will answer questions about their own
+data, so the Describe step asks questions and composes the prose from the
+answers. The composition runs in the browser from a controlled vocabulary, so
+the wording is consistent across datasets and across the people writing them,
+which is what a reviewer reading fifty records actually wants.
+
+Two rules keep it honest:
+
+- **It never asserts what it was not told.** Every sentence traces to an answer
+  or to something read out of the upload. Leave a question blank and the
+  sentence is simply absent.
+- **A suggestion is labelled a suggestion.** Field definitions drafted from
+  common names (`OBSERVER`, `SURVEY_DATE`, `TORT_COUNT`) are marked "suggested,
+  review it" in the editor, and validation warns while any remain unread. It is
+  your name on the record.
 
 ## What the tool enforces
 
@@ -109,6 +133,8 @@ src/lib/                pure logic, no DOM, unit tested
   crs.js                CRS registry, FGDC spref builder, reprojection
   model.js              the project model and DEVA constants
   import.js             reads ArcGIS Pro, FGDC and ISO metadata records
+  vocabulary.js         the answer options and DEVA keyword vocabulary
+  compose.js            writes the prose from the answers plus the schema
   workspace.js          reads XML Workspace Documents into a project
   workspace-data.js     streaming scanner for the data half of a workspace
   workspace-reader.js   ties the two together over a chunked stream

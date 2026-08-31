@@ -346,6 +346,15 @@ export function createProject(overrides = {}) {
     distributionUrl: '',
     distributionFees: 'None',
 
+    // --- Portal item fields (Section 4.1) -----------------------------------
+    summary: '',
+    portalTags: '',
+
+    // --- Guided writer ------------------------------------------------------
+    // The answers behind the drafted prose, kept so a draft can be revised
+    // rather than re-answered.
+    guided: null,
+
     // --- Metadata record ----------------------------------------------------
     metadataDate: today,
 

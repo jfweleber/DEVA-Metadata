@@ -10,6 +10,7 @@ import { el, clear, qs, toast } from './dom.js';
 import { state, subscribe, setStep, restore, clearDraft } from './store.js';
 import { validateProject } from '../lib/validate.js';
 import * as uploadStep from './steps/upload.js';
+import * as describeStep from './steps/describe.js';
 import * as identificationStep from './steps/identification.js';
 import * as keywordsStep from './steps/keywords.js';
 import * as spatialStep from './steps/spatial.js';
@@ -20,6 +21,7 @@ import * as reviewStep from './steps/review.js';
 
 const STEPS = [
   { id: 'upload', label: 'Upload', module: uploadStep },
+  { id: 'describe', label: 'Describe', module: describeStep },
   { id: 'identification', label: 'Identification', module: identificationStep },
   { id: 'keywords', label: 'Keywords', module: keywordsStep },
   { id: 'spatial', label: 'Spatial', module: spatialStep },
