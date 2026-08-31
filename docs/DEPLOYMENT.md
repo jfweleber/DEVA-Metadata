@@ -7,7 +7,9 @@ root as the web root.
 Two requirements only:
 
 1. **Serve `.js` with a JavaScript MIME type.** The app uses native ES modules,
-   and browsers refuse a module served as `text/plain`.
+   and browsers refuse a module served as `text/plain`. Every host below, nginx
+   included, does this out of the box; see the warning under Option A before
+   reaching for a `types` override.
 2. **HTTPS.** Copy to clipboard uses the async clipboard API, which browsers
    restrict to secure origins. There is a fallback, but HTTPS keeps it clean.
 
@@ -28,6 +30,25 @@ current certificate on that host does not include it.
 The repository is public, so the server can clone it directly with no
 credentials.
 
+### The short version
+
+SSH to the Linode and run:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jfweleber/DEVA-Metadata/main/scripts/deploy-nginx.sh | sudo bash
+```
+
+That script does everything the rest of this section describes: clone, server
+block, enable, test, reload, certificate. It is safe to run again, and rerunning
+it is how you deploy an update. It writes exactly one nginx file, named for this
+domain, and will not overwrite an existing one.
+
+Read it first if you would rather not pipe a script into a shell; it is short
+and lives at `scripts/deploy-nginx.sh`. The manual steps below are the same
+thing, done by hand.
+
+### The manual version
+
 ```bash
 sudo git clone https://github.com/jfweleber/DEVA-Metadata.git /var/www/deva-metadata
 sudo chown -R www-data:www-data /var/www/deva-metadata
@@ -44,9 +65,6 @@ server {
     root /var/www/deva-metadata;
     index index.html;
 
-    # ES modules must be served as JavaScript, not text/plain.
-    types { text/javascript js mjs; }
-
     location / {
         try_files $uri $uri/ =404;
     }
@@ -61,6 +79,12 @@ server {
     add_header Referrer-Policy "same-origin";
 }
 ```
+
+Do not add a `types { text/javascript js mjs; }` line to that block. Inside a
+`server`, `types` **replaces** the MIME map inherited from `mime.types` instead
+of extending it, so the stylesheet and images would start arriving as
+`application/octet-stream` and the page would render unstyled. Nginx already
+maps `.js` correctly, which is all the ES modules need.
 
 Enable it, get a certificate, and reload. Certbot rewrites the block to listen
 on 443 and adds the HTTP redirect:
