@@ -6,9 +6,12 @@
 #
 #   sudo bash scripts/deploy-nginx.sh
 #
-# Or, without a checkout on the server yet:
+# It works three ways:
 #
-#   curl -fsSL https://raw.githubusercontent.com/jfweleber/DEVA-Metadata/main/scripts/deploy-nginx.sh | sudo bash
+#   1. From a checkout on the server: it pulls and reloads.
+#   2. From nothing: it clones the repository first.
+#   3. From files you unpacked into APP_DIR yourself, for example out of the
+#      release tarball. It leaves them alone and only configures nginx.
 #
 # It is safe to run more than once. On the first run it clones the repository,
 # writes an nginx server block and requests a certificate. On later runs it
@@ -33,27 +36,34 @@ fail() { printf '\nERROR: %s\n' "$1" >&2; exit 1; }
 
 [ "$(id -u)" -eq 0 ] || fail "Run this with sudo."
 command -v nginx >/dev/null || fail "nginx is not installed on this host."
-command -v git >/dev/null || fail "git is not installed. Try: apt install git"
 
 # -----------------------------------------------------------------------------
 # STEP 1: GET THE CODE
 # -----------------------------------------------------------------------------
 if [ -d "${APP_DIR}/.git" ]; then
   log "Updating the existing checkout at ${APP_DIR}"
+  command -v git >/dev/null || fail "git is not installed. Try: apt install git"
   git -C "${APP_DIR}" fetch --quiet origin "${BRANCH}"
   git -C "${APP_DIR}" reset --hard --quiet "origin/${BRANCH}"
+  DEPLOYED_AT="$(git -C "${APP_DIR}" log -1 --format='%h %s')"
+elif [ -f "${APP_DIR}/index.html" ]; then
+  # Files were put here by hand, usually by unpacking the release tarball.
+  # Leave them alone and just do the nginx half of the job.
+  log "Using the files already in ${APP_DIR}, skipping the checkout"
+  DEPLOYED_AT="files already in place"
+elif [ -e "${APP_DIR}" ] && [ -n "$(ls -A "${APP_DIR}" 2>/dev/null)" ]; then
+  fail "${APP_DIR} exists, is not a git checkout, and has no index.html. Move it aside first."
 else
-  [ -e "${APP_DIR}" ] && fail "${APP_DIR} exists but is not a git checkout. Move it aside first."
+  command -v git >/dev/null || fail "git is not installed. Try: apt install git"
   log "Cloning ${REPO} into ${APP_DIR}"
   git clone --quiet --branch "${BRANCH}" "${REPO}" "${APP_DIR}"
+  DEPLOYED_AT="$(git -C "${APP_DIR}" log -1 --format='%h %s')"
 fi
 
 # nginx only needs to read these files.
 chown -R www-data:www-data "${APP_DIR}"
 find "${APP_DIR}" -type d -exec chmod 755 {} +
 find "${APP_DIR}" -type f -exec chmod 644 {} +
-
-DEPLOYED_AT="$(git -C "${APP_DIR}" log -1 --format='%h %s')"
 
 # -----------------------------------------------------------------------------
 # STEP 2: NGINX SERVER BLOCK

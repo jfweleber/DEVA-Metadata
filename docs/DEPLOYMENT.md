@@ -30,22 +30,38 @@ current certificate on that host does not include it.
 The repository is public, so the server can clone it directly with no
 credentials.
 
-### The short version
+### The short version, from a release tarball
 
-SSH to the Linode and run:
+This works before the code is on GitHub, and needs nothing from GitHub at all.
+Copy `deva-metadata-publisher.tar.gz` to the server, then:
+
+```bash
+scp deva-metadata-publisher.tar.gz jamie@metadata.weleber.net:~/
+
+ssh jamie@metadata.weleber.net
+sudo mkdir -p /var/www/deva-metadata
+sudo tar -xzf ~/deva-metadata-publisher.tar.gz -C /var/www/deva-metadata
+sudo bash /var/www/deva-metadata/scripts/deploy-nginx.sh
+```
+
+The script sees the unpacked files, leaves them alone, and does only the nginx
+half: server block, enable, test, reload, certificate.
+
+### The short version, once the code is on GitHub
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jfweleber/DEVA-Metadata/main/scripts/deploy-nginx.sh | sudo bash
 ```
 
-That script does everything the rest of this section describes: clone, server
-block, enable, test, reload, certificate. It is safe to run again, and rerunning
-it is how you deploy an update. It writes exactly one nginx file, named for this
-domain, and will not overwrite an existing one.
+Here the script clones the repository itself, so there is nothing to copy up.
+Later runs pull and reload, which makes rerunning it the way you deploy an
+update.
 
-Read it first if you would rather not pipe a script into a shell; it is short
-and lives at `scripts/deploy-nginx.sh`. The manual steps below are the same
-thing, done by hand.
+Either way it is safe to run again, it writes exactly one nginx file named for
+this domain, and it will not overwrite an existing one or touch any other site
+on the box. Read it first if you would rather not pipe a script into a shell; it
+is short and lives at `scripts/deploy-nginx.sh`. The manual steps below are the
+same thing, done by hand.
 
 ### The manual version
 
