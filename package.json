@@ -8,8 +8,13 @@
     "test": "node --test \"tests/**/*.test.js\"",
     "serve": "node scripts/serve.js"
   },
-  "license": "CC0-1.0",
+  "license": "AGPL-3.0-only",
   "engines": {
     "node": ">=18"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jfweleber/DEVA-Metadata.git"
+  },
+  "homepage": "https://metadata.weleber.net"
 }

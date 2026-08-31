@@ -61,7 +61,8 @@ repository:
 - [`docs/USER-GUIDE.md`](docs/USER-GUIDE.md) walks DEVA staff through the eight
   steps and the publishing workflow that follows.
 - [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) covers hosting at
-  metadata.weleber.net.
+  metadata.weleber.net, where the domain already points at an nginx host and
+  needs only a server block and a certificate.
 - [`CLAUDE.md`](CLAUDE.md) is the DEVA GIS publishing standard this tool
   implements.
 
