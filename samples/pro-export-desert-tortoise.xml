@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="en">
+  <Esri>
+    <CreaDate>20260204</CreaDate>
+    <CreaTime>10221500</CreaTime>
+    <ArcGISFormat>1.0</ArcGISFormat>
+    <ArcGISProfile>ItemDescription</ArcGISProfile>
+    <DataProperties>
+      <itemProps>
+        <itemName Sync="TRUE">DEVA_GIS_Desert_Tortoise_Core_Habitat</itemName>
+        <imsContentType Sync="TRUE">002</imsContentType>
+        <nativeExtBox>
+          <westBL Sync="TRUE">452113.482300</westBL>
+          <eastBL Sync="TRUE">612884.917700</eastBL>
+          <southBL Sync="TRUE">3985221.660800</southBL>
+          <northBL Sync="TRUE">4118330.224100</northBL>
+        </nativeExtBox>
+      </itemProps>
+      <coordRef>
+        <type Sync="TRUE">Projected</type>
+        <geogcsn Sync="TRUE">GCS_North_American_1983</geogcsn>
+        <csUnits Sync="TRUE">Linear Unit: Meter (1.000000)</csUnits>
+        <projcsn Sync="TRUE">NAD_1983_UTM_Zone_11N</projcsn>
+        <peXml Sync="TRUE">&lt;ProjectedCoordinateSystem xsi:type='typens:ProjectedCoordinateSystem'&gt;&lt;WKT&gt;PROJCS["NAD_1983_UTM_Zone_11N",GEOGCS["GCS_North_American_1983"]]&lt;/WKT&gt;&lt;/ProjectedCoordinateSystem&gt;</peXml>
+      </coordRef>
+    </DataProperties>
+  </Esri>
+  <dataIdInfo>
+    <idCitation>
+      <resTitle>DEVA GIS Desert Tortoise Core Habitat</resTitle>
+      <date><pubDate>2026-02-04T00:00:00</pubDate></date>
+    </idCitation>
+    <idAbs>&lt;DIV STYLE="text-align:Left;"&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Core habitat polygons for desert tortoise (Gopherus agassizii) within Death Valley National Park, derived from focal density analysis of habitat suitability model outputs.&lt;/SPAN&gt;&lt;/P&gt;&lt;P&gt;&lt;SPAN&gt;Each polygon represents a spatially concentrated zone of moderate or optimal habitat quality.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;</idAbs>
+    <idPurp>Supports NEPA analysis, project planning, and consultation for actions that may affect desert tortoise habitat within the park.</idPurp>
+    <idCredit>National Park Service, Death Valley National Park. Analysis by Jamie Weleber under a Great Basin Institute cooperative agreement.</idCredit>
+    <searchKeys>
+      <keyword>desert tortoise</keyword>
+      <keyword>habitat suitability</keyword>
+      <keyword>threatened species</keyword>
+    </searchKeys>
+    <placeKeys>
+      <keyword>Death Valley National Park</keyword>
+      <keyword>Inyo County</keyword>
+      <keyword>California</keyword>
+    </placeKeys>
+    <tpCat><TopicCatCd value="002"/></tpCat>
+    <idStatus><ProgCd value="001">Complete</ProgCd></idStatus>
+    <resMaint><maintFreq><MaintFreqCd value="009">As needed</MaintFreqCd></maintFreq></resMaint>
+    <dataExt>
+      <geoEle>
+        <GeoBndBox esriExtentType="search">
+          <westBL>-117.850000</westBL>
+          <eastBL>-116.010000</eastBL>
+          <northBL>37.190000</northBL>
+          <southBL>35.990000</southBL>
+        </GeoBndBox>
+      </geoEle>
+    </dataExt>
+  </dataIdInfo>
+  <refSysInfo>
+    <RefSystem>
+      <refSysID>
+        <identCode code="26911"/>
+        <idCodeSpace>EPSG</idCodeSpace>
+      </refSysID>
+    </RefSystem>
+  </refSysInfo>
+  <spdoinfo>
+    <direct>Vector</direct>
+    <ptvctinf>
+      <esriterm Name="DEVA_GIS_Desert_Tortoise_Core_Habitat">
+        <efeatyp Sync="TRUE">Simple</efeatyp>
+        <efeageom code="4" Sync="TRUE">Polygon</efeageom>
+        <esritopo Sync="TRUE">FALSE</esritopo>
+        <efeacnt Sync="TRUE">1478</efeacnt>
+        <spindex Sync="TRUE">TRUE</spindex>
+        <linrefer Sync="TRUE">FALSE</linrefer>
+      </esriterm>
+    </ptvctinf>
+  </spdoinfo>
+  <spref>
+    <horizsys>
+      <cordsysn>
+        <geogcsn>GCS_North_American_1983</geogcsn>
+        <projcsn>NAD_1983_UTM_Zone_11N</projcsn>
+      </cordsysn>
+    </horizsys>
+  </spref>
+  <dqInfo>
+    <dataLineage>
+      <prcStep>
+        <stepDesc>Reclassified the desert tortoise habitat suitability index raster into three suitability classes using the Reclassify tool.</stepDesc>
+        <stepDateTm>2026-01-14T00:00:00</stepDateTm>
+      </prcStep>
+      <prcStep>
+        <stepDesc>Ran Focal Statistics with a 450 meter circular neighborhood to identify concentrated habitat, then converted the result to polygons.</stepDesc>
+        <stepDateTm>2026-01-21T00:00:00</stepDateTm>
+      </prcStep>
+    </dataLineage>
+  </dqInfo>
+  <eainfo>
+    <detailed Name="DEVA_GIS_Desert_Tortoise_Core_Habitat">
+      <enttyp>
+        <enttypl>DEVA_GIS_Desert_Tortoise_Core_Habitat</enttypl>
+        <enttypd>Core habitat polygons for desert tortoise derived from focal density analysis of habitat suitability model outputs.</enttypd>
+        <enttypds>Death Valley National Park</enttypds>
+      </enttyp>
+      <attr>
+        <attrlabl Sync="TRUE">OBJECTID</attrlabl>
+        <attalias Sync="TRUE">OBJECTID</attalias>
+        <attrtype Sync="TRUE">OID</attrtype>
+        <attwidth Sync="TRUE">4</attwidth>
+        <atprecis Sync="TRUE">10</atprecis>
+        <attscale Sync="TRUE">0</attscale>
+        <attrdef Sync="TRUE">Internal feature number.</attrdef>
+        <attrdefs Sync="TRUE">Esri</attrdefs>
+        <attrdomv><udom Sync="TRUE">Sequential unique whole numbers that are automatically generated.</udom></attrdomv>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">Shape</attrlabl>
+        <attalias Sync="TRUE">Shape</attalias>
+        <attrtype Sync="TRUE">Geometry</attrtype>
+        <attwidth Sync="TRUE">0</attwidth>
+        <attrdef Sync="TRUE">Feature geometry.</attrdef>
+        <attrdefs Sync="TRUE">Esri</attrdefs>
+        <attrdomv><udom Sync="TRUE">Coordinates defining the features.</udom></attrdomv>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">Habitat_Category</attrlabl>
+        <attalias Sync="TRUE">Habitat Category</attalias>
+        <attrtype Sync="TRUE">String</attrtype>
+        <attwidth Sync="TRUE">50</attwidth>
+        <attrdomv>
+          <edom>
+            <edomv>Moderate Core</edomv>
+            <edomvd>Concentrated moderate quality habitat.</edomvd>
+            <edomvds>Death Valley National Park</edomvds>
+          </edom>
+          <edom>
+            <edomv>Optimal Core</edomv>
+            <edomvd>Concentrated optimal quality habitat.</edomvd>
+            <edomvds>Death Valley National Park</edomvds>
+          </edom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">HSI_Mean</attrlabl>
+        <attalias Sync="TRUE">Mean HSI Score</attalias>
+        <attrtype Sync="TRUE">Double</attrtype>
+        <attwidth Sync="TRUE">8</attwidth>
+        <atnumdec Sync="TRUE">4</atnumdec>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">ACRES</attrlabl>
+        <attalias Sync="TRUE">Area (Acres)</attalias>
+        <attrtype Sync="TRUE">Double</attrtype>
+        <attwidth Sync="TRUE">8</attwidth>
+        <atnumdec Sync="TRUE">6</atnumdec>
+        <attrdomv><rdom><rdommin>0.01</rdommin><rdommax>18422.53</rdommax><attrunit>acres</attrunit></rdom></attrdomv>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">EditDate</attrlabl>
+        <attalias Sync="TRUE">EditDate</attalias>
+        <attrtype Sync="TRUE">Date</attrtype>
+        <attwidth Sync="TRUE">8</attwidth>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">Shape_Length</attrlabl>
+        <attalias Sync="TRUE">Shape_Length</attalias>
+        <attrtype Sync="TRUE">Double</attrtype>
+        <attwidth Sync="TRUE">8</attwidth>
+        <atnumdec Sync="TRUE">6</atnumdec>
+      </attr>
+      <attr>
+        <attrlabl Sync="TRUE">Shape_Area</attrlabl>
+        <attalias Sync="TRUE">Shape_Area</attalias>
+        <attrtype Sync="TRUE">Double</attrtype>
+        <attwidth Sync="TRUE">8</attwidth>
+        <atnumdec Sync="TRUE">6</atnumdec>
+      </attr>
+    </detailed>
+  </eainfo>
+  <mdDateSt Sync="TRUE">20260204</mdDateSt>
+</metadata>

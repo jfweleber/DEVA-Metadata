@@ -1,0 +1,15 @@
+{
+  "name": "deva-metadata-publisher",
+  "version": "1.0.0",
+  "description": "Browser-based FGDC metadata and ArcGIS Portal description builder for Death Valley National Park",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.js\"",
+    "serve": "node scripts/serve.js"
+  },
+  "license": "CC0-1.0",
+  "engines": {
+    "node": ">=18"
+  }
+}

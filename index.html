@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEVA Metadata Publisher</title>
+<meta name="description" content="Turn an ArcGIS Pro metadata export into an FGDC-compliant XML record and a Portal HTML description snippet for Death Valley National Park.">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="assets/app.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%232c5f2d'/><path d='M6 22l6-11 4 7 3-4 7 8z' fill='%2397bc62'/></svg>">
+</head>
+<body>
+<header class="masthead">
+  <div>
+    <h1>DEVA Metadata Publisher</h1>
+    <p>FGDC XML and Portal description snippets for Death Valley National Park</p>
+  </div>
+  <div class="masthead-actions">
+    <span id="status-line" style="font-size:13px; align-self:center; color:#dbe8d3;"></span>
+    <button type="button" class="secondary" id="restart">Start over</button>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="stepnav" id="stepnav" aria-label="Metadata steps"></nav>
+  <main id="panel"></main>
+</div>
+
+<footer class="site">
+  <p>Everything runs in your browser. No file you open here is uploaded anywhere.</p>
+  <p>Metadata standard: FGDC Content Standard for Digital Geospatial Metadata (FGDC-STD-001-1998). National Park Service, Death Valley National Park.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<noscript>
+  <p style="max-width:60ch;margin:24px auto;padding:0 24px;">This tool builds your metadata in the browser, so JavaScript needs to be enabled.</p>
+</noscript>
+
+<script type="module">
+  import { start } from './src/app/main.js';
+  start();
+</script>
+</body>
+</html>
